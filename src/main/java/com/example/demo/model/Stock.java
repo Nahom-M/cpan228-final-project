@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +19,8 @@ public class Stock {
     private int quantity;
 
     @ManyToOne
-    @JsonBackReference
+    @JoinColumn(name = "item_id")
+    @JsonIgnoreProperties("stockEntries")
     private Item item;
 
     @ManyToOne
