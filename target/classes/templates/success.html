@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Success</title></head>
+<head>
+    <title>Success</title>
+</head>
 <body>
-<h2>Item Successfully Requested</h2>
-<p th:text="'Brand: ' + ${item.brand}"></p>
-<p th:text="'Name: ' + ${item.name}"></p>
-<p th:text="'Replenished from Distribution Centre ID: ' + ${item.distributionCentre.id}"></p>
-<a href="/distribution-centres">Back to Centres</a>
+    <h2>Item Successfully Requested</h2>
+
+    <p th:text="'Brand: ' + ${item.brand}"></p>
+    <p th:text="'Name: ' + ${item.name}"></p>
+    <p th:text="'Replenished from Distribution Centre ID: ' + ${centre.id}"></p>
+
+    <br>
+    <a href="/request-item">Make Another Request</a>
+    <br>
+    <a href="/index">Go to Home</a>
 </body>
 </html>

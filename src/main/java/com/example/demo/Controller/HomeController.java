@@ -12,4 +12,10 @@ public class HomeController {
         model.addAttribute("message", "Hello from Spring Boot!");
         return "home";
     }
+
+    @GetMapping("/request-item")
+    public String showRequestForm() {
+        return "request-item";
+    }
+
 }
