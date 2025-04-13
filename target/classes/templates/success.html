@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Success</title>
-</head>
+<head><title>Success</title></head>
 <body>
-    <h2>Item Successfully Requested</h2>
+<h2>Success</h2>
 
-    <p th:text="'Brand: ' + ${item.brand}"></p>
+<!-- Show item info if available -->
+<div th:if="${item != null}">
     <p th:text="'Name: ' + ${item.name}"></p>
-    <p th:text="'Replenished from Distribution Centre ID: ' + ${centre.id}"></p>
+    <p th:text="'Brand: ' + ${item.brand}"></p>
+    <p th:text="'Price: ' + ${item.price}"></p>
+</div>
 
-    <br>
-    <a href="/request-item">Make Another Request</a>
-    <br>
-    <a href="/index">Go to Home</a>
+<!-- Show distribution centre if available -->
+<div th:if="${centre != null}">
+    <p th:text="'Replenished from Centre ID: ' + ${centre.id}"></p>
+</div>
+
+<!-- Show message if available (e.g., for deletion) -->
+<div th:if="${message != null}">
+    <p th:text="${message}"></p>
+</div>
+
+<a href="/index">Go Home</a>
 </body>
 </html>
