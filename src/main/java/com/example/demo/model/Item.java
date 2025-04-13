@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.sql.Date;
@@ -29,6 +31,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "distribution_centre_id")
+    @JsonBackReference
     private DistributionCentre distributionCentre;
 
     @PrePersist

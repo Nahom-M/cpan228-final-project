@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Add Item</title></head>
+<body>
+<h2>Add New Item</h2>
+<form action="http://localhost:8080/api/centres/{centreId}/items" method="post">
+    <label>Item Name: <input type="text" name="name" /></label><br/>
+    <label>Brand: <input type="text" name="brand" /></label><br/>
+    <label>Price: <input type="number" name="price" step="0.01" /></label><br/>
+    <label>Year Created: <input type="number" name="yearCreated" /></label><br/>
+    <label>Quantity: <input type="number" name="quantity" /></label><br/>
+    <label>Centre ID: <input type="number" name="centreId" /></label><br/>
+    <button type="submit">Add Item</button>
+</form>
+<a href="/centres">Back to Centres</a>
+</body>
+</html>
