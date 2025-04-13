@@ -45,17 +45,23 @@ public class DistributionCentreController {
         }
 
         // Remove a stock entry (centre-item relation)
-        @DeleteMapping("/stock/{stockId}")
-        public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
-                Stock stock = stockRepo.findById(stockId)
-                                .orElseThrow(() -> new RuntimeException("Stock not found"));
+        @DeleteMapping("/items/{itemId}")
+        public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
+                Item item = itemRepo.findById(itemId)
+                                .orElseThrow(() -> new RuntimeException("Item not found"));
 
-                // Remove stock from associated item and centre
-                stock.getItem().getStockEntries().remove(stock);
-                stock.getDistributionCentre().getStockEntries().remove(stock);
+                // Remove stock entries from their associated distribution centres
+                for (Stock stock : item.getStockEntries()) {
+                        DistributionCentre centre = stock.getDistributionCentre();
+                        centre.getStockEntries().remove(stock);
+                }
 
-                // Then delete the stock
-                stockRepo.delete(stock);
+                // Clear the list of stock entries to avoid persistence issues
+                item.getStockEntries().clear();
+
+                // Delete the item (thanks to cascade and orphanRemoval, stocks will be cleaned
+                // up)
+                itemRepo.delete(item);
 
                 return ResponseEntity.noContent().build();
         }
