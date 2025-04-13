@@ -1,4 +1,4 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
 import com.example.demo.data.DistributionCentreRepository;
 import com.example.demo.data.ItemRepository;
@@ -21,7 +21,7 @@ public class DistributionCentreViewController {
 
     private final StockRepository stockRepo;
     private final ItemRepository itemRepo;
-    private final DistributionCentreRepository centreRepo; 
+    private final DistributionCentreRepository centreRepo;
 
     // Show the form page
     @GetMapping("/request-item")
@@ -54,7 +54,7 @@ public class DistributionCentreViewController {
         return "success";
     }
 
-        // Show form to add new item
+    // Show form to add new item
     @GetMapping("/add-item")
     public String showAddItemForm() {
         return "add-item";
@@ -63,12 +63,12 @@ public class DistributionCentreViewController {
     // Handle form submission for adding item
     @PostMapping("/add-item")
     public String addNewItemToCentre(@RequestParam Long centreId,
-                                    @RequestParam String name,
-                                    @RequestParam Brand brand,
-                                    @RequestParam double price,
-                                    @RequestParam int yearCreated,
-                                    @RequestParam int quantity,
-                                    Model model) {
+            @RequestParam String name,
+            @RequestParam Brand brand,
+            @RequestParam double price,
+            @RequestParam int yearCreated,
+            @RequestParam int quantity,
+            Model model) {
         try {
             Item item = new Item();
             item.setName(name);
