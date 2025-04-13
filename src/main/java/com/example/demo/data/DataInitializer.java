@@ -31,6 +31,18 @@ public class DataInitializer {
             vancouverCentre.setLongitude(-123.120738);
             centreRepo.save(vancouverCentre);
 
+            DistributionCentre montrealCentre = new DistributionCentre();
+            montrealCentre.setName("Montreal Distribution Centre");
+            montrealCentre.setLatitude(897.288929);
+            montrealCentre.setLongitude(-723.176738);
+            centreRepo.save(montrealCentre);
+
+            DistributionCentre ottawaCentre = new DistributionCentre();
+            ottawaCentre.setName("Ottawa Distribution Centre");
+            ottawaCentre.setLatitude(98.246754);
+            ottawaCentre.setLongitude(-3.320918);
+            centreRepo.save(ottawaCentre);
+
             Item item1 = new Item();
             item1.setName("Sports Jacket");
             item1.setBrand(Brand.GUCCI);
@@ -58,7 +70,25 @@ public class DataInitializer {
             item3.setCreatedAt(new Date(System.currentTimeMillis()));
             item3.setDistributionCentre(vancouverCentre);
 
-            itemRepo.saveAll(Arrays.asList(item1, item2, item3));
+            Item item4 = new Item();
+            item4.setName("Socks");
+            item4.setBrand(Brand.LOUIS_VUITTON);
+            item4.setPrice(109.79);
+            item4.setYearCreated(2022);
+            item4.setQuantity(10);
+            item4.setCreatedAt(new Date(System.currentTimeMillis()));
+            item4.setDistributionCentre(montrealCentre);
+
+            Item item5 = new Item();
+            item5.setName("Bracelet");
+            item5.setBrand(Brand.VERSACE);
+            item5.setPrice(29.50);
+            item5.setYearCreated(2023);
+            item5.setQuantity(17);
+            item5.setCreatedAt(new Date(System.currentTimeMillis()));
+            item5.setDistributionCentre(ottawaCentre);
+
+            itemRepo.saveAll(Arrays.asList(item1, item2, item3, item4, item5));
         };
     }
 }

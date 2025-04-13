@@ -7,6 +7,7 @@ import com.example.demo.data.DistributionCentreRepository;
 import com.example.demo.data.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,4 +45,36 @@ public class DistributionCentreController {
             @RequestParam String name) {
         return itemRepo.findByBrandAndName(brand, name);
     }
+
+    @PostMapping("/request-item")
+    public String requestItemFromCentres(@RequestParam String name,
+            @RequestParam Brand brand,
+            Model model) {
+        List<Item> items = itemRepo.findByBrandAndName(brand, name);
+
+        if (items.isEmpty()) {
+            model.addAttribute("message", "Item not found in any distribution centre.");
+            return "error";
+        }
+
+        Item sourceItem = items.stream()
+                .filter(i -> i.getQuantity() > 0)
+                .findFirst()
+                .orElse(null);
+
+        if (sourceItem == null) {
+            model.addAttribute("message", "Item found, but all centres are out of stock.");
+            return "error";
+        }
+
+        // Reduce quantity at distribution centre
+        sourceItem.setQuantity(sourceItem.getQuantity() - 1);
+        itemRepo.save(sourceItem);
+
+        // Simulate replenishing to warehouse (could be another repo/entity)
+        // For now, just display success page
+        model.addAttribute("item", sourceItem);
+        return "success";
+    }
+
 }
