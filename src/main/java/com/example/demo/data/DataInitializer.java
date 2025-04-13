@@ -1,7 +1,7 @@
 package com.example.demo.data;
 
 import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
