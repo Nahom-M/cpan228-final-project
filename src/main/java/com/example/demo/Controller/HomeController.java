@@ -13,9 +13,4 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/request-item")
-    public String showRequestForm() {
-        return "request-item";
-    }
-
 }
