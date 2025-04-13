@@ -3,8 +3,6 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,5 @@ public class DistributionCentre {
     private double longitude;
 
     @OneToMany(mappedBy = "distributionCentre", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Item> items = new ArrayList<>();
-
+    private List<Stock> stockEntries = new ArrayList<>();
 }

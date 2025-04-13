@@ -1,10 +1,11 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,15 +25,12 @@ public class Item {
 
     private double price;
     private int yearCreated;
-    private int quantity;
 
     @Column(nullable = false, updatable = false)
     private Date createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "distribution_centre_id")
-    @JsonBackReference
-    private DistributionCentre distributionCentre;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stock> stockEntries = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
