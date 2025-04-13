@@ -1,4 +1,4 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
 import com.example.demo.data.StockRepository;
 import com.example.demo.model.Brand;
@@ -25,12 +25,12 @@ public class DistributionCentreViewController {
     // Handle form submission
     @PostMapping("/distribution-centres/request-item")
     public String requestItemFromAnyCentre(@RequestParam String name,
-                                           @RequestParam Brand brand,
-                                           Model model) {
+            @RequestParam Brand brand,
+            Model model) {
         List<Stock> stockList = stockRepo.findAll().stream()
                 .filter(s -> s.getItem().getName().equalsIgnoreCase(name) &&
-                             s.getItem().getBrand() == brand &&
-                             s.getQuantity() > 0)
+                        s.getItem().getBrand() == brand &&
+                        s.getQuantity() > 0)
                 .toList();
 
         if (stockList.isEmpty()) {

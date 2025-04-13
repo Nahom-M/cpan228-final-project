@@ -1,4 +1,4 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
 import com.example.demo.data.DistributionCentreRepository;
 import com.example.demo.data.ItemRepository;
@@ -15,57 +15,66 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DistributionCentreController {
 
-    private final DistributionCentreRepository centreRepo;
-    private final ItemRepository itemRepo;
-    private final StockRepository stockRepo;
+        private final DistributionCentreRepository centreRepo;
+        private final ItemRepository itemRepo;
+        private final StockRepository stockRepo;
 
-    // Add stock of an existing item to a centre
-    @PostMapping("/{centreId}/items")
-    public ResponseEntity<Stock> addItemToCentre(
-            @PathVariable Long centreId,
-            @RequestParam Long itemId,
-            @RequestParam int quantity) {
+        // Add stock of an existing item to a centre
+        @PostMapping("/{centreId}/items")
+        public ResponseEntity<Stock> addNewItemToCentre(
+                        @PathVariable Long centreId,
+                        @RequestBody Item item,
+                        @RequestParam int quantity) {
 
-        DistributionCentre centre = centreRepo.findById(centreId)
-                .orElseThrow(() -> new RuntimeException("Centre not found"));
+                DistributionCentre centre = centreRepo.findById(centreId)
+                                .orElseThrow(() -> new RuntimeException("Centre not found"));
 
-        Item item = itemRepo.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                // Save the new item first
+                Item savedItem = itemRepo.save(item);
 
-        Stock stock = new Stock();
-        stock.setDistributionCentre(centre);
-        stock.setItem(item);
-        stock.setQuantity(quantity);
+                Stock stock = new Stock();
+                stock.setDistributionCentre(centre);
+                stock.setItem(savedItem);
+                stock.setQuantity(quantity);
 
-        // Maintain bidirectional integrity
-        centre.getStockEntries().add(stock);
-        item.getStockEntries().add(stock);
+                // Maintain bidirectional integrity
+                centre.getStockEntries().add(stock);
+                savedItem.getStockEntries().add(stock);
 
-        return ResponseEntity.ok(stockRepo.save(stock));
-    }
+                return ResponseEntity.ok(stockRepo.save(stock));
+        }
 
-    // Remove a stock entry (centre-item relation)
-    @DeleteMapping("/stock/{stockId}")
-    public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
-        stockRepo.deleteById(stockId);
-        return ResponseEntity.noContent().build();
-    }
+        // Remove a stock entry (centre-item relation)
+        @DeleteMapping("/stock/{stockId}")
+        public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
+                Stock stock = stockRepo.findById(stockId)
+                                .orElseThrow(() -> new RuntimeException("Stock not found"));
 
-    // Get all centres
-    @GetMapping
-    public List<DistributionCentre> getAllCentres() {
-        return centreRepo.findAll();
-    }
+                // Remove stock from associated item and centre
+                stock.getItem().getStockEntries().remove(stock);
+                stock.getDistributionCentre().getStockEntries().remove(stock);
 
-    // Find all stock entries for a given item name and brand
-    @GetMapping("/items/search")
-    public List<Stock> findItemInCentres(
-            @RequestParam Brand brand,
-            @RequestParam String name) {
+                // Then delete the stock
+                stockRepo.delete(stock);
 
-        return stockRepo.findAll().stream()
-                .filter(s -> s.getItem().getBrand() == brand &&
-                             s.getItem().getName().equalsIgnoreCase(name))
-                .toList();
-    }
+                return ResponseEntity.noContent().build();
+        }
+
+        // Get all centres
+        @GetMapping
+        public List<DistributionCentre> getAllCentres() {
+                return centreRepo.findAll();
+        }
+
+        // Find all stock entries for a given item name and brand
+        @GetMapping("/items/search")
+        public List<Stock> findItemInCentres(
+                        @RequestParam Brand brand,
+                        @RequestParam String name) {
+
+                return stockRepo.findAll().stream()
+                                .filter(s -> s.getItem().getBrand() == brand &&
+                                                s.getItem().getName().equalsIgnoreCase(name))
+                                .toList();
+        }
 }
