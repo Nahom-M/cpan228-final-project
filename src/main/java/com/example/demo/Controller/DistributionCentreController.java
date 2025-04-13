@@ -39,6 +39,10 @@ public class DistributionCentreController {
         stock.setItem(item);
         stock.setQuantity(quantity);
 
+        // Maintain bidirectional integrity
+        centre.getStockEntries().add(stock);
+        item.getStockEntries().add(stock);
+
         return ResponseEntity.ok(stockRepo.save(stock));
     }
 

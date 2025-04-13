@@ -1,15 +1,16 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class DistributionCentre {
 
     @Id
@@ -21,5 +22,6 @@ public class DistributionCentre {
     private double longitude;
 
     @OneToMany(mappedBy = "distributionCentre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Stock> stockEntries = new ArrayList<>();
 }

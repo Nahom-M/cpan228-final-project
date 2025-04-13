@@ -1,12 +1,13 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class Stock {
 
     @Id
@@ -16,8 +17,10 @@ public class Stock {
     private int quantity;
 
     @ManyToOne
+    @JsonBackReference
     private Item item;
 
     @ManyToOne
+    @JsonBackReference
     private DistributionCentre distributionCentre;
 }

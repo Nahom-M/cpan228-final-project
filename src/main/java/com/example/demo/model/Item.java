@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,11 +8,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "items")
 public class Item {
 
     @Id
@@ -25,15 +25,9 @@ public class Item {
 
     private double price;
     private int yearCreated;
-
-    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Stock> stockEntries = new ArrayList<>();
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date(System.currentTimeMillis());
-    }
 }
