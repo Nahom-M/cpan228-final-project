@@ -9,8 +9,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.config.Customizer;
-
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -18,31 +17,37 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            org.springframework.security.config.annotation.web.builders.HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(withDefaults()); // only form login (styled page)
+            .csrf().disable()
+            .authorizeHttpRequests(auth -> auth
+                // ✅ Permit all requests to distribution-centres endpoints
+                .requestMatchers("/distribution-centres/**").permitAll()
 
-        http.headers().frameOptions().disable(); // allow H2 console
+                // ✅ Also permit static resources and form pages if needed
+                .requestMatchers("/", "/request-item", "/add-item", "/delete-item", "/css/**", "/js/**").permitAll()
+
+                // 🔒 All other requests require authentication
+                .anyRequest().authenticated()
+            )
+            .formLogin(withDefaults())
+            .httpBasic(withDefaults());
 
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
-                User.withUsername("test")
-                        .password(passwordEncoder.encode("123"))
-                        .roles("ADMIN")
-                        .build(),
-                User.withUsername("user")
-                        .password(passwordEncoder.encode("1234"))
-                        .roles("USER")
-                        .build());
+            User.withUsername("test")
+                .password(encoder.encode("123"))
+                .roles("ADMIN")
+                .build(),
+            User.withUsername("user")
+                .password(encoder.encode("1234"))
+                .roles("USER")
+                .build()
+        );
     }
 
     @Bean
